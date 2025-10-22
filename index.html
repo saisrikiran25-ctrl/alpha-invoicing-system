@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha - Advanced Invoicing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js"></script>
+</head>
+<body>
+    <!-- Authentication Module - Cold Fusion Aesthetic -->
+    <div id="auth-module" class="auth-module">
+        <div class="auth-background">
+            <div class="quantum-grid"></div>
+            <div class="scanline-overlay"></div>
+        </div>
+        
+        <!-- Login View -->
+        <div id="login-view" class="auth-view active">
+            <div class="glassmorphism-panel">
+                <div class="system-header">
+                    <h1 class="system-title">ALPHA: AUTHENTICATION SYMBIOTE</h1>
+                    <p class="system-prompt">Engage Neural Signature to Access Core</p>
+                </div>
+                
+                <form id="login-form" class="auth-form">
+                    <div class="input-group">
+                        <label class="input-label">Neural ID</label>
+                        <input type="email" id="login-email" class="neural-input" placeholder="operator@alpha.net" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Security Matrix</label>
+                        <input type="password" id="login-password" class="neural-input" placeholder="••••••••" required>
+                    </div>
+                    
+                    <button type="submit" class="energy-button primary">
+                        <span class="button-content">ACCESS SYSTEM</span>
+                        <div class="energy-sheath"></div>
+                    </button>
+                    
+                    <div class="auth-links">
+                        <button type="button" class="link-button" onclick="switchAuthView('signup')">Initialize New Operator</button>
+                        <button type="button" class="link-button" onclick="switchAuthView('reset')">Recovery Protocol</button>
+                    </div>
+                </form>
+                
+                <div id="login-error" class="system-error hidden"></div>
+            </div>
+        </div>
+        
+        <!-- Signup View -->
+        <div id="signup-view" class="auth-view">
+            <div class="glassmorphism-panel">
+                <div class="system-header">
+                    <h1 class="system-title">ALPHA: NEURAL SIGNATURE IMPRINTING</h1>
+                    <p class="system-prompt">Register Your Protocol within the Alpha Network</p>
+                </div>
+                
+                <form id="signup-form" class="auth-form">
+                    <div class="input-group">
+                        <label class="input-label">Operator Designation</label>
+                        <input type="text" id="signup-name" class="neural-input" placeholder="Commander Zero" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Neural ID</label>
+                        <input type="email" id="signup-email" class="neural-input" placeholder="operator@alpha.net" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Security Matrix</label>
+                        <input type="password" id="signup-password" class="neural-input" placeholder="••••••••" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Entity Designation</label>
+                        <input type="text" id="signup-company" class="neural-input" placeholder="Alpha Industries" required>
+                    </div>
+                    
+                    <button type="submit" class="energy-button primary">
+                        <span class="button-content">IMPRINT SIGNATURE</span>
+                        <div class="energy-sheath"></div>
+                    </button>
+                    
+                    <div class="auth-links">
+                        <button type="button" class="link-button" onclick="switchAuthView('login')">Return to Authentication</button>
+                    </div>
+                </form>
+                
+                <div id="signup-error" class="system-error hidden"></div>
+            </div>
+        </div>
+        
+        <!-- Password Reset View -->
+        <div id="password-reset-view" class="auth-view">
+            <div class="glassmorphism-panel">
+                <div class="system-header">
+                    <h1 class="system-title">ALPHA: SYSTEM RECOVERY SEQUENCE</h1>
+                    <p class="system-prompt">Initiate Password Matrix Realignment</p>
+                </div>
+                
+                <form id="reset-form" class="auth-form">
+                    <div class="input-group">
+                        <label class="input-label">Neural ID</label>
+                        <input type="email" id="reset-email" class="neural-input" placeholder="operator@alpha.net" required>
+                    </div>
+                    
+                    <button type="submit" class="energy-button primary">
+                        <span class="button-content">DISPATCH RECOVERY BEACON</span>
+                        <div class="energy-sheath"></div>
+                    </button>
+                    
+                    <div class="auth-links">
+                        <button type="button" class="link-button" onclick="switchAuthView('login')">Return to Authentication</button>
+                    </div>
+                </form>
+                
+                <div id="reset-success" class="system-success hidden">
+                    <p>Recovery Beacon Dispatched. Check your designated comms channel.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        Clients: <span id="totalClients"></span><br>
+        Invoices: <span id="totalInvoices"></span>
+    </div>
+    
+    <!-- Invoicing Module - Living Energy Aesthetic -->
+    <div id="invoicing-module" class="invoicing-module hidden">
+        <div class="living-energy-background"></div>
+        
+        <!-- Header -->
+        <header class="alpha-header">
+            <div class="header-content">
+                <h1 class="alpha-logo">ALPHA</h1>
+                <nav class="alpha-nav">
+                    <button class="nav-button active" onclick="switchInvoicingView('dashboard')">Command Center</button>
+                    <button class="nav-button" onclick="switchInvoicingView('settings')">Configuration</button>
+                    <button class="nav-button" onclick="logout()">Exit System</button>
+                </nav>
+            </div>
+        </header>
+        
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="invoicing-view active">
+            <div class="dashboard-container">
+                <div class="command-header">
+                    <h2 class="command-title">Command Dashboard</h2>
+                    <p class="command-subtitle">5-second financial situation overview</p>
+                </div>
+                
+                <div class="priority-feed">
+                    <div class="feed-header">
+                        <h3>Priority Feed</h3>
+                    </div>
+                    
+                    <div id="invoices-list" class="invoices-container">
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <p>No invoices in the system. Initialize your first invoice to begin.</p>
+                        </div>
+                    </div>
+                    
+                    <button id="new-invoice-btn" class="new-invoice-button">
+                        <div class="energy-pulse"></div>
+                        <span>⚡</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Invoice Builder View -->
+        <div id="invoice-builder-view" class="invoicing-view">
+            <div class="builder-container">
+                <div class="builder-header">
+                    <button class="back-button" onclick="switchInvoicingView('dashboard')">← Return to Dashboard</button>
+                    <h2>Invoice Forge</h2>
+                </div>
+                
+                <div class="forge-panels">
+                    <!-- Left Panel - Form -->
+                    <div class="forge-panel form-panel">
+                        <form id="invoice-form" class="invoice-form">
+                            <div class="form-section">
+                                <h3>Client Information</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Client</label>
+                                        <select id="client-select" class="form-control">
+                                            <option value="">Select or Add Client</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn--secondary btn--sm" onclick="openClientModal()">+ Add Client</button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3>Invoice Details</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Invoice Number</label>
+                                        <input type="text" id="invoice-number" class="form-control" placeholder="INV-001" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Due Date</label>
+                                        <input type="date" id="due-date" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3>Line Items</h3>
+                                <div id="line-items-container">
+                                    <!-- Line items will be added here dynamically -->
+                                </div>
+                                <button type="button" class="btn btn--secondary btn--sm" onclick="addLineItem()">+ Add Item</button>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3>Tax Configuration</h3>
+                                <div class="form-group">
+                                    <label>Tax Rate</label>
+                                    <select id="tax-rate" class="form-control">
+                                        <option value="0">0% - No Tax</option>
+                                        <option value="5">5% - Reduced Rate</option>
+                                        <option value="10">10% - Standard Rate</option>
+                                        <option value="15">15% - Higher Rate</option>
+                                        <option value="18">18% - GST Rate</option>
+                                        <option value="20">20% - VAT Rate</option>
+                                        <option value="25">25% - Premium Rate</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Right Panel - Summary -->
+                    <div class="forge-panel summary-panel">
+                        <div class="financial-summary">
+                            <h3>Live Financial Summary</h3>
+                            <div class="summary-line">
+                                <span>Subtotal</span>
+                                <span id="subtotal-amount" class="amount">0.00</span>
+                            </div>
+                            <div class="summary-line">
+                                <span>Tax</span>
+                                <span id="tax-amount" class="amount">0.00</span>
+                            </div>
+                            <div class="summary-line total">
+                                <span>Total</span>
+                                <span id="total-amount" class="amount">0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-panel">
+                            <button type="button" class="btn btn--outline btn--full-width" onclick="saveDraft()">Save as Draft</button>
+                            <button type="button" class="btn btn--primary btn--full-width" onclick="previewInvoice()">Preview & Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings View -->
+        <div id="settings-view" class="invoicing-view">
+            <div class="settings-container">
+                <div class="settings-header">
+                    <h2>OPERATOR CONFIGURATION MATRIX</h2>
+                </div>
+                
+                <div class="settings-content">
+                    <form id="settings-form" class="settings-form">
+                        <div class="settings-section">
+                            <h3>Business Information</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" id="company-name" class="form-control" placeholder="Alpha Industries">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Company Address</label>
+                                <textarea id="company-address" class="form-control" rows="3" placeholder="123 Business St, Suite 100&#10;City, State 12345"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Company Email</label>
+                                <input type="email" id="company-email" class="form-control" placeholder="contact@alpha.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Company Phone</label>
+                                <input type="tel" id="company-phone" class="form-control" placeholder="+1 555 123-4567">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Banking Details</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Bank Name</label>
+                                <input type="text" id="bank-name" class="form-control" placeholder="Alpha Bank">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Account Number</label>
+                                <input type="text" id="account-number" class="form-control" placeholder="1234567890">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Account Holder Name</label>
+                                <input type="text" id="account-holder" class="form-control" placeholder="Alpha Industries LLC">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Payment Terms</h3>
+                            <div class="form-group">
+                                <label class="form-label">Default Payment Terms</label>
+                                <select id="payment-terms" class="form-control">
+                                    <option value="15">15 days</option>
+                                    <option value="30" selected>30 days</option>
+                                    <option value="45">45 days</option>
+                                    <option value="60">60 days</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Bio-Signature Uplink</h3>
+                            <div class="logo-upload-zone" id="logo-upload-zone">
+                                <div class="upload-content">
+                                    <div class="upload-icon">📁</div>
+                                    <p>Drop your logo here or click to select</p>
+                                    <input type="file" id="logo-upload" accept="image/*" hidden>
+                                </div>
+                                <img id="logo-preview" class="logo-preview hidden" alt="Logo preview">
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <button class="btn btn--primary" onclick="saveSettings()">COMMIT CONFIGURATION</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Client Modal -->
+    <div id="client-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Client Manifest</h3>
+                <button class="modal-close" onclick="closeClientModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="client-form" class="client-form">
+                    <div class="form-group">
+                        <label class="form-label">Client Name</label>
+                        <input type="text" id="client-name" class="form-control" placeholder="Acme Corporation" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="client-email" class="form-control" placeholder="contact@acme.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea id="client-address" class="form-control" rows="3" placeholder="123 Business St, Suite 100, City, State 12345"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" id="client-phone" class="form-control" placeholder="+1 555 123-4567">
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Save Client</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Transmission Portal</h3>
+                <button class="modal-close" onclick="closePreviewModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-container">
+                    <div class="invoice-preview" id="invoice-preview">
+                        <!-- Invoice preview will be generated here -->
+                    </div>
+                    
+                    <div class="email-section">
+                        <h4>Email Configuration</h4>
+                        <textarea id="email-body" class="form-control" rows="6" placeholder="Email body will be generated..."></textarea>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="download-button" class="btn btn--outline btn--full-width" onclick="downloadInvoice()">
+                            <span class="button-text">Download Invoice</span>
+                            <div class="download-progress hidden"></div>
+                        </button>
+                        <button id="send-button" class="btn btn--primary btn--full-width" onclick="sendInvoice()">
+                            <span class="button-text">Send Invoice</span>
+                            <div class="sending-wave hidden"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

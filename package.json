@@ -1,0 +1,32 @@
+{
+  "name": "alpha-invoicing-system",
+  "version": "1.0.0",
+  "description": "ALPHA Invoicing System - A full-stack invoicing web application",
+  "main": "alpha_server.js",
+  "scripts": {
+    "start": "node alpha_server.js",
+    "dev": "nodemon alpha_server.js"
+  },
+  "keywords": [
+    "invoicing",
+    "nodejs",
+    "express",
+    "mysql"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.5",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
