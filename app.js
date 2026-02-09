@@ -856,6 +856,7 @@ function closeAllModals() {
 // PREVIEW & DOWNLOAD LOGIC
 // ----------------------------------------------------------------------------
 
+
 function previewInvoice() {
     // 1. Validate Basic Data
     if (!validateInvoiceForm()) return;
@@ -882,46 +883,46 @@ function previewInvoice() {
     const darkBlue = '#0A0C10';
 
     const html = `
-        <div class="invoice-box" style="padding: 40px; background: white !important; color: ${darkBlue}; font-family: 'Inter', sans-serif;">
+        <div class="invoice-box" style="padding: 40px; background: white !important; color: ${darkBlue} !important; font-family: 'Inter', sans-serif;">
             <div class="invoice-header" style="display: flex; justify-content: space-between; margin-bottom: 40px;">
                 <div class="company-details">
                     ${logoHtml}
-                    <h2 style="margin: 0; color: ${darkBlue}; font-weight: 700;">${settings.companyName || ''}</h2>
-                    <p style="margin: 5px 0; color: ${darkBlue}; font-size: 0.9em; white-space: pre-line;">${settings.companyAddress || ''}</p>
-                    <p style="margin: 0; color: ${darkBlue}; font-size: 0.9em;">${settings.companyEmail || ''}</p>
-                    <p style="margin: 0; color: ${darkBlue}; font-size: 0.9em;">${settings.companyPhone || ''}</p>
+                    <h2 style="margin: 0; color: ${darkBlue} !important; font-weight: 700;">${settings.companyName || ''}</h2>
+                    <p style="margin: 5px 0; color: ${darkBlue} !important; font-size: 0.9em; white-space: pre-line;">${settings.companyAddress || ''}</p>
+                    <p style="margin: 0; color: ${darkBlue} !important; font-size: 0.9em;">${settings.companyEmail || ''}</p>
+                    <p style="margin: 0; color: ${darkBlue} !important; font-size: 0.9em;">${settings.companyPhone || ''}</p>
                 </div>
                 <div class="invoice-meta" style="text-align: right;">
-                    <h1 style="margin: 0; color: ${darkBlue}; font-size: 2.5em; font-weight: 900;">INVOICE</h1>
-                    <p style="margin: 5px 0; font-weight: 600; color: ${darkBlue};"># ${inv.number}</p>
-                    <p style="margin: 0; color: ${darkBlue};">Date: ${inv.createdAt.split('T')[0]}</p>
-                    <p style="margin: 0; color: ${darkBlue};">Due: ${inv.dueDate || 'On Receipt'}</p>
+                    <h1 style="margin: 0; color: ${darkBlue} !important; font-size: 2.5em; font-weight: 900;">INVOICE</h1>
+                    <p style="margin: 5px 0; font-weight: 600; color: ${darkBlue} !important;"># ${inv.number}</p>
+                    <p style="margin: 0; color: ${darkBlue} !important;">Date: ${inv.createdAt.split('T')[0]}</p>
+                    <p style="margin: 0; color: ${darkBlue} !important;">Due: ${inv.dueDate || 'On Receipt'}</p>
                 </div>
             </div>
 
             <div class="client-details" style="margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px;">
-                <h3 style="margin: 0 0 10px 0; color: ${darkBlue}; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Bill To:</h3>
-                <h4 style="margin: 0; font-size: 1.2em; font-weight: 600; color: ${darkBlue};">${client.name}</h4>
-                <p style="margin: 5px 0; color: ${darkBlue}; white-space: pre-line;">${client.address || ''}</p>
-                <p style="margin: 0; color: ${darkBlue};">${client.email || ''}</p>
+                <h3 style="margin: 0 0 10px 0; color: ${darkBlue} !important; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Bill To:</h3>
+                <h4 style="margin: 0; font-size: 1.2em; font-weight: 600; color: ${darkBlue} !important;">${client.name}</h4>
+                <p style="margin: 5px 0; color: ${darkBlue} !important; white-space: pre-line;">${client.address || ''}</p>
+                <p style="margin: 0; color: ${darkBlue} !important;">${client.email || ''}</p>
             </div>
 
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                 <thead>
                     <tr style="background: #f8f9fa;">
-                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue};">Description</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue};">Qty</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue};">Price</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue};">Total</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Description</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Qty</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Price</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${inv.lineItems.map(item => `
                     <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px; color: ${darkBlue};">${item.description}</td>
-                        <td style="padding: 12px; text-align: right; color: ${darkBlue};">${item.quantity}</td>
-                        <td style="padding: 12px; text-align: right; color: ${darkBlue};">$${parseFloat(item.price).toFixed(2)}</td>
-                        <td style="padding: 12px; text-align: right; font-weight: 600; color: ${darkBlue};">$${parseFloat(item.total).toFixed(2)}</td>
+                        <td style="padding: 12px; color: ${darkBlue} !important;">${item.description}</td>
+                        <td style="padding: 12px; text-align: right; color: ${darkBlue} !important;">${item.quantity}</td>
+                        <td style="padding: 12px; text-align: right; color: ${darkBlue} !important;">₹${parseFloat(item.price).toFixed(2)}</td>
+                        <td style="padding: 12px; text-align: right; font-weight: 600; color: ${darkBlue} !important;">₹${parseFloat(item.total).toFixed(2)}</td>
                     </tr>
                     `).join('')}
                 </tbody>
@@ -929,23 +930,23 @@ function previewInvoice() {
 
             <div class="invoice-totals" style="display: flex; flex-direction: column; align-items: flex-end;">
                 <div style="width: 250px;">
-                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: ${darkBlue};">
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: ${darkBlue} !important;">
                         <span>Subtotal:</span>
-                        <span>$${parseFloat(inv.subtotal).toFixed(2)}</span>
+                        <span>₹${parseFloat(inv.subtotal).toFixed(2)}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: ${darkBlue};">
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: ${darkBlue} !important;">
                         <span>Tax (${inv.taxRate}%):</span>
-                        <span>$${parseFloat(inv.taxAmount).toFixed(2)}</span>
+                        <span>₹${parseFloat(inv.taxAmount).toFixed(2)}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid ${darkBlue}; margin-top: 10px; font-weight: 700; color: ${darkBlue}; font-size: 1.2em;">
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid ${darkBlue}; margin-top: 10px; font-weight: 700; color: ${darkBlue} !important; font-size: 1.2em;">
                         <span>Total:</span>
-                        <span>$${parseFloat(inv.total).toFixed(2)}</span>
+                        <span>₹${parseFloat(inv.total).toFixed(2)}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="invoice-footer" style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.8em; color: ${darkBlue}; text-align: center;">
-                <h4 style="margin: 0 0 5px 0; color: ${darkBlue};">Payment Terms</h4>
+            <div class="invoice-footer" style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.8em; color: ${darkBlue} !important; text-align: center;">
+                <h4 style="margin: 0 0 5px 0; color: ${darkBlue} !important;">Payment Terms</h4>
                 <p style="margin: 0 0 10px 0;">${settings.paymentTermsLabel || `Payment due within ${settings.paymentTerms || 30} days`}</p>
                 <div style="background: #f8f9fa; padding: 10px; display: inline-block; border-radius: 4px;">
                     <p style="margin: 0;"><strong>Bank:</strong> ${settings.bankName || 'N/A'} | <strong>Account:</strong> ${settings.accountNumber || 'N/A'}</p>
@@ -960,7 +961,11 @@ function previewInvoice() {
     // 5. Pre-fill Email Body
     const emailBodyInput = document.getElementById('email-body');
     if (emailBodyInput) {
-        const emailContent = `Dear ${client.name},\n\nPlease find attached invoice #${inv.number} for ${settings.currency || '$'}${parseFloat(inv.total).toFixed(2)}.\n\nThank you for your business,\n${settings.companyName || 'Alpha User'}`;
+        const currencySymbol = state.user.currency === 'INR' || state.user.currency === '₹' ? '₹' : '$';
+        // Force Rupee for now as requested
+        const displayCurrency = '₹';
+
+        const emailContent = `Dear ${client.name},\n\nPlease find attached invoice #${inv.number} for ${displayCurrency}${parseFloat(inv.total).toFixed(2)}.\n\nThank you for your business,\n${settings.companyName || 'Alpha User'}`;
         emailBodyInput.value = emailContent;
         // Move email box down slightly as requested
         const emailSection = emailBodyInput.closest('.email-section');
