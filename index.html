@@ -11,128 +11,10 @@
     <script src="app.js"></script>
 </head>
 <body>
-    <!-- Authentication Module - Cold Fusion Aesthetic -->
-    <div id="auth-module" class="auth-module">
-        <div class="auth-background">
-            <div class="quantum-grid"></div>
-            <div class="scanline-overlay"></div>
-        </div>
-        
-        <!-- Login View -->
-        <div id="login-view" class="auth-view active">
-            <div class="glassmorphism-panel">
-                <div class="system-header">
-                    <h1 class="system-title">ALPHA: AUTHENTICATION SYMBIOTE</h1>
-                    <p class="system-prompt">Engage Neural Signature to Access Core</p>
-                </div>
-                
-                <form id="login-form" class="auth-form">
-                    <div class="input-group">
-                        <label class="input-label">Neural ID</label>
-                        <input type="email" id="login-email" class="neural-input" placeholder="operator@alpha.net" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Security Matrix</label>
-                        <input type="password" id="login-password" class="neural-input" placeholder="••••••••" required>
-                    </div>
-                    
-                    <button type="submit" class="energy-button primary">
-                        <span class="button-content">ACCESS SYSTEM</span>
-                        <div class="energy-sheath"></div>
-                    </button>
-                    
-                    <div class="auth-links">
-                        <button type="button" class="link-button" onclick="switchAuthView('signup')">Initialize New Operator</button>
-                        <button type="button" class="link-button" onclick="switchAuthView('reset')">Recovery Protocol</button>
-                    </div>
-                </form>
-                
-                <div id="login-error" class="system-error hidden"></div>
-            </div>
-        </div>
-        
-        <!-- Signup View -->
-        <div id="signup-view" class="auth-view">
-            <div class="glassmorphism-panel">
-                <div class="system-header">
-                    <h1 class="system-title">ALPHA: NEURAL SIGNATURE IMPRINTING</h1>
-                    <p class="system-prompt">Register Your Protocol within the Alpha Network</p>
-                </div>
-                
-                <form id="signup-form" class="auth-form">
-                    <div class="input-group">
-                        <label class="input-label">Operator Designation</label>
-                        <input type="text" id="signup-name" class="neural-input" placeholder="Commander Zero" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Neural ID</label>
-                        <input type="email" id="signup-email" class="neural-input" placeholder="operator@alpha.net" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Security Matrix</label>
-                        <input type="password" id="signup-password" class="neural-input" placeholder="••••••••" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Entity Designation</label>
-                        <input type="text" id="signup-company" class="neural-input" placeholder="Alpha Industries" required>
-                    </div>
-                    
-                    <button type="submit" class="energy-button primary">
-                        <span class="button-content">IMPRINT SIGNATURE</span>
-                        <div class="energy-sheath"></div>
-                    </button>
-                    
-                    <div class="auth-links">
-                        <button type="button" class="link-button" onclick="switchAuthView('login')">Return to Authentication</button>
-                    </div>
-                </form>
-                
-                <div id="signup-error" class="system-error hidden"></div>
-            </div>
-        </div>
-        
-        <!-- Password Reset View -->
-        <div id="password-reset-view" class="auth-view">
-            <div class="glassmorphism-panel">
-                <div class="system-header">
-                    <h1 class="system-title">ALPHA: SYSTEM RECOVERY SEQUENCE</h1>
-                    <p class="system-prompt">Initiate Password Matrix Realignment</p>
-                </div>
-                
-                <form id="reset-form" class="auth-form">
-                    <div class="input-group">
-                        <label class="input-label">Neural ID</label>
-                        <input type="email" id="reset-email" class="neural-input" placeholder="operator@alpha.net" required>
-                    </div>
-                    
-                    <button type="submit" class="energy-button primary">
-                        <span class="button-content">DISPATCH RECOVERY BEACON</span>
-                        <div class="energy-sheath"></div>
-                    </button>
-                    
-                    <div class="auth-links">
-                        <button type="button" class="link-button" onclick="switchAuthView('login')">Return to Authentication</button>
-                    </div>
-                </form>
-                
-                <div id="reset-success" class="system-success hidden">
-                    <p>Recovery Beacon Dispatched. Check your designated comms channel.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Auth Module REMOVED for Static Deployment -->
 
-    <div id="dashboard">
-        Clients: <span id="totalClients"></span><br>
-        Invoices: <span id="totalInvoices"></span>
-    </div>
-    
     <!-- Invoicing Module - Living Energy Aesthetic -->
-    <div id="invoicing-module" class="invoicing-module hidden">
+    <div id="invoicing-module" class="invoicing-module">
         <div class="living-energy-background"></div>
         
         <!-- Header -->
@@ -142,7 +24,7 @@
                 <nav class="alpha-nav">
                     <button class="nav-button active" onclick="switchInvoicingView('dashboard')">Command Center</button>
                     <button class="nav-button" onclick="switchInvoicingView('settings')">Configuration</button>
-                    <button class="nav-button" onclick="logout()">Exit System</button>
+                    <!-- Logout Removed -->
                 </nav>
             </div>
         </header>
@@ -155,6 +37,17 @@
                     <p class="command-subtitle">5-second financial situation overview</p>
                 </div>
                 
+                <div class="dashboard-stats-grid">
+                     <div class="stat-card">
+                         <h3>Total Clients</h3>
+                         <div id="totalClients" class="stat-value">0</div>
+                     </div>
+                     <div class="stat-card">
+                         <h3>Total Invoices</h3>
+                         <div id="totalInvoices" class="stat-value">0</div>
+                     </div>
+                </div>
+
                 <div class="priority-feed">
                     <div class="feed-header">
                         <h3>Priority Feed</h3>
@@ -259,8 +152,8 @@
                         </div>
                         
                         <div class="action-panel">
-                            <button type="button" class="btn btn--outline btn--full-width" onclick="saveDraft()">Save as Draft</button>
-                            <button type="button" class="btn btn--primary btn--full-width" onclick="previewInvoice()">Preview & Send</button>
+                            <!-- saveDraft renamed to saveInvoiceFunc in app.js for consistent naming, updated here -->
+                             <button type="button" class="btn btn--primary btn--full-width" onclick="saveInvoiceFunc()">Save Invoice</button>
                         </div>
                     </div>
                 </div>
