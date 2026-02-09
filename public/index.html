@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpha - Advanced Invoicing System</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <script src="app.js"></script>
+    <link rel="stylesheet" href="style.css?v=new_deploy_fix">
+    <script src="app.js?v=new_deploy_fix"></script>
 </head>
+
 <body>
     <!-- Auth Module REMOVED for Static Deployment -->
 
     <!-- Invoicing Module - Living Energy Aesthetic -->
     <div id="invoicing-module" class="invoicing-module">
         <div class="living-energy-background"></div>
-        
+
         <!-- Header -->
         <header class="alpha-header">
             <div class="header-content">
@@ -28,7 +32,7 @@
                 </nav>
             </div>
         </header>
-        
+
         <!-- Dashboard View -->
         <div id="dashboard-view" class="invoicing-view active">
             <div class="dashboard-container">
@@ -36,30 +40,30 @@
                     <h2 class="command-title">Command Dashboard</h2>
                     <p class="command-subtitle">5-second financial situation overview</p>
                 </div>
-                
+
                 <div class="dashboard-stats-grid">
-                     <div class="stat-card">
-                         <h3>Total Clients</h3>
-                         <div id="totalClients" class="stat-value">0</div>
-                     </div>
-                     <div class="stat-card">
-                         <h3>Total Invoices</h3>
-                         <div id="totalInvoices" class="stat-value">0</div>
-                     </div>
+                    <div class="stat-card">
+                        <h3>Total Clients</h3>
+                        <div id="totalClients" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Invoices</h3>
+                        <div id="totalInvoices" class="stat-value">0</div>
+                    </div>
                 </div>
 
                 <div class="priority-feed">
                     <div class="feed-header">
                         <h3>Priority Feed</h3>
                     </div>
-                    
+
                     <div id="invoices-list" class="invoices-container">
                         <div class="empty-state">
                             <div class="empty-icon">📋</div>
                             <p>No invoices in the system. Initialize your first invoice to begin.</p>
                         </div>
                     </div>
-                    
+
                     <button id="new-invoice-btn" class="new-invoice-button">
                         <div class="energy-pulse"></div>
                         <span>⚡</span>
@@ -67,15 +71,16 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Invoice Builder View -->
         <div id="invoice-builder-view" class="invoicing-view">
             <div class="builder-container">
                 <div class="builder-header">
-                    <button class="back-button" onclick="switchInvoicingView('dashboard')">← Return to Dashboard</button>
+                    <button class="back-button" onclick="switchInvoicingView('dashboard')">← Return to
+                        Dashboard</button>
                     <h2>Invoice Forge</h2>
                 </div>
-                
+
                 <div class="forge-panels">
                     <!-- Left Panel - Form -->
                     <div class="forge-panel form-panel">
@@ -89,16 +94,18 @@
                                             <option value="">Select or Add Client</option>
                                         </select>
                                     </div>
-                                    <button type="button" class="btn btn--secondary btn--sm" onclick="openClientModal()">+ Add Client</button>
+                                    <button type="button" class="btn btn--secondary btn--sm"
+                                        onclick="openClientModal()">+ Add Client</button>
                                 </div>
                             </div>
-                            
+
                             <div class="form-section">
                                 <h3>Invoice Details</h3>
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Invoice Number</label>
-                                        <input type="text" id="invoice-number" class="form-control" placeholder="INV-001" required>
+                                        <input type="text" id="invoice-number" class="form-control"
+                                            placeholder="INV-001" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Due Date</label>
@@ -106,15 +113,16 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-section">
                                 <h3>Line Items</h3>
                                 <div id="line-items-container">
                                     <!-- Line items will be added here dynamically -->
                                 </div>
-                                <button type="button" class="btn btn--secondary btn--sm" onclick="addLineItem()">+ Add Item</button>
+                                <button type="button" class="btn btn--secondary btn--sm" onclick="addLineItem()">+ Add
+                                    Item</button>
                             </div>
-                            
+
                             <div class="form-section">
                                 <h3>Tax Configuration</h3>
                                 <div class="form-group">
@@ -132,7 +140,7 @@
                             </div>
                         </form>
                     </div>
-                    
+
                     <!-- Right Panel - Summary -->
                     <div class="forge-panel summary-panel">
                         <div class="financial-summary">
@@ -150,68 +158,73 @@
                                 <span id="total-amount" class="amount">0.00</span>
                             </div>
                         </div>
-                        
+
                         <div class="action-panel">
                             <!-- saveDraft renamed to saveInvoiceFunc in app.js for consistent naming, updated here -->
-                             <button type="button" class="btn btn--primary btn--full-width" onclick="saveInvoiceFunc()">Save Invoice</button>
+                            <button type="button" class="btn btn--primary btn--full-width"
+                                onclick="saveInvoiceFunc()">Save Invoice</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Settings View -->
         <div id="settings-view" class="invoicing-view">
             <div class="settings-container">
                 <div class="settings-header">
                     <h2>OPERATOR CONFIGURATION MATRIX</h2>
                 </div>
-                
+
                 <div class="settings-content">
                     <form id="settings-form" class="settings-form">
                         <div class="settings-section">
                             <h3>Business Information</h3>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Company Name</label>
-                                <input type="text" id="company-name" class="form-control" placeholder="Alpha Industries">
+                                <input type="text" id="company-name" class="form-control"
+                                    placeholder="Alpha Industries">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Company Address</label>
-                                <textarea id="company-address" class="form-control" rows="3" placeholder="123 Business St, Suite 100&#10;City, State 12345"></textarea>
+                                <textarea id="company-address" class="form-control" rows="3"
+                                    placeholder="123 Business St, Suite 100&#10;City, State 12345"></textarea>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Company Email</label>
-                                <input type="email" id="company-email" class="form-control" placeholder="contact@alpha.com">
+                                <input type="email" id="company-email" class="form-control"
+                                    placeholder="contact@alpha.com">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Company Phone</label>
                                 <input type="tel" id="company-phone" class="form-control" placeholder="+1 555 123-4567">
                             </div>
                         </div>
-                        
+
                         <div class="settings-section">
                             <h3>Banking Details</h3>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Bank Name</label>
                                 <input type="text" id="bank-name" class="form-control" placeholder="Alpha Bank">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Account Number</label>
                                 <input type="text" id="account-number" class="form-control" placeholder="1234567890">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Account Holder Name</label>
-                                <input type="text" id="account-holder" class="form-control" placeholder="Alpha Industries LLC">
+                                <input type="text" id="account-holder" class="form-control"
+                                    placeholder="Alpha Industries LLC">
                             </div>
                         </div>
-                        
+
                         <div class="settings-section">
                             <h3>Payment Terms</h3>
                             <div class="form-group">
@@ -224,7 +237,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="settings-section">
                             <h3>Bio-Signature Uplink</h3>
                             <div class="logo-upload-zone" id="logo-upload-zone">
@@ -237,13 +250,13 @@
                             </div>
                         </div>
                     </form>
-                    
+
                     <button class="btn btn--primary" onclick="saveSettings()">COMMIT CONFIGURATION</button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Client Modal -->
     <div id="client-modal" class="modal hidden">
         <div class="modal-backdrop"></div>
@@ -256,15 +269,18 @@
                 <form id="client-form" class="client-form">
                     <div class="form-group">
                         <label class="form-label">Client Name</label>
-                        <input type="text" id="client-name" class="form-control" placeholder="Acme Corporation" required>
+                        <input type="text" id="client-name" class="form-control" placeholder="Acme Corporation"
+                            required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" id="client-email" class="form-control" placeholder="contact@acme.com" required>
+                        <input type="email" id="client-email" class="form-control" placeholder="contact@acme.com"
+                            required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Address</label>
-                        <textarea id="client-address" class="form-control" rows="3" placeholder="123 Business St, Suite 100, City, State 12345"></textarea>
+                        <textarea id="client-address" class="form-control" rows="3"
+                            placeholder="123 Business St, Suite 100, City, State 12345"></textarea>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Phone</label>
@@ -275,7 +291,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Preview Modal -->
     <div id="preview-modal" class="modal hidden">
         <div class="modal-backdrop"></div>
@@ -289,14 +305,16 @@
                     <div class="invoice-preview" id="invoice-preview">
                         <!-- Invoice preview will be generated here -->
                     </div>
-                    
+
                     <div class="email-section">
                         <h4>Email Configuration</h4>
-                        <textarea id="email-body" class="form-control" rows="6" placeholder="Email body will be generated..."></textarea>
+                        <textarea id="email-body" class="form-control" rows="6"
+                            placeholder="Email body will be generated..."></textarea>
                     </div>
-                    
+
                     <div class="action-buttons">
-                        <button id="download-button" class="btn btn--outline btn--full-width" onclick="downloadInvoice()">
+                        <button id="download-button" class="btn btn--outline btn--full-width"
+                            onclick="downloadInvoice()">
                             <span class="button-text">Download Invoice</span>
                             <div class="download-progress hidden"></div>
                         </button>
@@ -310,4 +328,5 @@
         </div>
     </div>
 </body>
+
 </html>
