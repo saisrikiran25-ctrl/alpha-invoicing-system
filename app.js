@@ -844,48 +844,197 @@ function closeAllModals() {
 }
 
 // STUBS for missing functions to prevent ReferenceErrors
-function previewInvoice(id) {
-    console.log('Preview Invoice', id);
-    const invoice = state.invoices.find(inv => inv.id === id);
-    if (!invoice) return;
+// ----------------------------------------------------------------------------
+// PREVIEW & DOWNLOAD LOGIC
+// ----------------------------------------------------------------------------
 
-    // Logic to show modal would go here
+function previewInvoice() {
+    // 1. Validate Basic Data
+    if (!validateInvoiceForm()) return;
+
+    // 2. Collect Data
+    collectInvoiceData(); // Updates state.currentInvoice
+    const inv = state.currentInvoice;
+    const client = state.clients.find(c => c.id == inv.client) || { name: 'Unknown Client', address: '', email: '' }; // Handle unselected client gracefully for preview
+    const settings = state.user;
+
+    // 3. specific validation for preview
+    if (!inv.lineItems || inv.lineItems.length === 0) {
+        showSystemMessage('⚠️ Add at least one line item to preview');
+        return;
+    }
+
+    // 4. Generate HTML
+    const previewContainer = document.getElementById('invoice-preview');
+    if (!previewContainer) return;
+
+    const logoHtml = settings.logo ? `<div class="invoice-logo"><img src="${settings.logo}" alt="Company Logo"></div>` : '';
+
+    const html = `
+        <div class="invoice-box" style="padding: 40px; background: white; color: #333; font-family: 'Inter', sans-serif;">
+            <div class="invoice-header" style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+                <div class="company-details">
+                    ${logoHtml}
+                    <h2 style="margin: 0; color: #2C3E50; font-weight: 700;">${settings.companyName || 'YOUR COMPANY'}</h2>
+                    <p style="margin: 5px 0; color: #666; font-size: 0.9em; white-space: pre-line;">${settings.companyAddress || ''}</p>
+                    <p style="margin: 0; color: #666; font-size: 0.9em;">${settings.companyEmail || ''}</p>
+                    <p style="margin: 0; color: #666; font-size: 0.9em;">${settings.companyPhone || ''}</p>
+                </div>
+                <div class="invoice-meta" style="text-align: right;">
+                    <h1 style="margin: 0; color: #2C3E50; font-size: 2.5em; font-weight: 900;">INVOICE</h1>
+                    <p style="margin: 5px 0; font-weight: 600; color: #666;"># ${inv.number}</p>
+                    <p style="margin: 0; color: #666;">Date: ${inv.createdAt.split('T')[0]}</p>
+                    <p style="margin: 0; color: #666;">Due: ${inv.dueDate || 'On Receipt'}</p>
+                </div>
+            </div>
+
+            <div class="client-details" style="margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #2C3E50; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Bill To:</h3>
+                <h4 style="margin: 0; font-size: 1.2em; font-weight: 600;">${client.name}</h4>
+                <p style="margin: 5px 0; color: #666; white-space: pre-line;">${client.address || ''}</p>
+                <p style="margin: 0; color: #666;">${client.email || ''}</p>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Description</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Qty</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Price</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${inv.lineItems.map(item => `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px; color: #333;">${item.description}</td>
+                        <td style="padding: 12px; text-align: right; color: #333;">${item.quantity}</td>
+                        <td style="padding: 12px; text-align: right; color: #333;">$${parseFloat(item.price).toFixed(2)}</td>
+                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #333;">$${parseFloat(item.total).toFixed(2)}</td>
+                    </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+
+            <div class="invoice-totals" style="display: flex; flex-direction: column; align-items: flex-end;">
+                <div style="width: 250px;">
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #666;">
+                        <span>Subtotal:</span>
+                        <span>$${parseFloat(inv.subtotal).toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #666;">
+                        <span>Tax (${inv.taxRate}%):</span>
+                        <span>$${parseFloat(inv.taxAmount).toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid #2C3E50; margin-top: 10px; font-weight: 700; color: #2C3E50; font-size: 1.2em;">
+                        <span>Total:</span>
+                        <span>$${parseFloat(inv.total).toFixed(2)}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-footer" style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.8em; color: #999; text-align: center;">
+                <h4 style="margin: 0 0 5px 0; color: #2C3E50;">Payment Terms</h4>
+                <p style="margin: 0 0 10px 0;">${settings.paymentTermsLabel || `Payment due within ${settings.paymentTerms || 30} days`}</p>
+                <div style="background: #f8f9fa; padding: 10px; display: inline-block; border-radius: 4px;">
+                    <p style="margin: 0;"><strong>Bank:</strong> ${settings.bankName || 'N/A'} | <strong>Account:</strong> ${settings.accountNumber || 'N/A'}</p>
+                </div>
+                <p style="margin-top: 20px; font-style: italic;">Thank you for your business!</p>
+            </div>
+        </div>
+    `;
+
+    previewContainer.innerHTML = html;
+
+    // 5. Show Modal
     const modal = document.getElementById('preview-modal');
     if (modal) {
         modal.classList.remove('hidden');
-        // Generate preview HTML...
-        const previewContainer = document.getElementById('invoice-preview');
-        if (previewContainer) {
-            previewContainer.innerHTML = `
-                <div class="p-8 bg-white text-black">
-                    <h2 class="text-2xl font-bold mb-4">INVOICE PREVIEW</h2>
-                    <p><strong>Invoice #:</strong> ${invoice.number}</p>
-                    <p><strong>Client:</strong> ${invoice.clientName}</p>
-                    <p><strong>Date:</strong> ${invoice.date}</p>
-                    <p><strong>Total:</strong> ${invoice.currency} ${invoice.total}</p>
-                </div>
-            `;
-        }
+        modal.classList.add('active');
     }
 }
 
-function downloadInvoice() {
-    console.log('Download Invoice');
-    // jsPDF logic here
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.text("Invoice", 10, 10);
-    doc.save("invoice.pdf");
+async function downloadInvoice() {
+    const previewElement = document.querySelector('#invoice-preview .invoice-box');
+    if (!previewElement) {
+        showSystemMessage('❌ Error: No invoice preview found');
+        return;
+    }
+
+    const btn = document.getElementById('download-button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="button-text">Generating PDF...</span>';
+    btn.disabled = true;
+
+    try {
+        const canvas = await html2canvas(previewElement, {
+            scale: 2, // Higher resolution
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jspdf.jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        // Handle multi-page if necessary (basic implementation)
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        const invNum = state.currentInvoice.number || 'invoice';
+        pdf.save(`${invNum}.pdf`);
+        showSystemMessage('✅ PDF Downloaded');
+
+    } catch (error) {
+        console.error('PDF Generation Error:', error);
+        showSystemMessage('❌ Error generating PDF: ' + error.message);
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
 }
 
 function sendInvoice() {
-    console.log('Send Invoice');
-    alert('Email functionality is not available in static mode.');
+    // Check if sending functionality is plausible (it's static so... no)
+    // But we can simulate or open mailto
+    const inv = state.currentInvoice;
+    const client = state.clients.find(c => c.id == inv.client);
+
+    if (!client || !client.email) {
+        showSystemMessage('⚠️ Client email not found');
+        return;
+    }
+
+    const subject = encodeURIComponent(`Invoice #${inv.number} from ${state.user.companyName}`);
+    const body = encodeURIComponent(`Dear ${client.name},\n\nPlease find attached invoice #${inv.number} for ${state.user.currency || '$'}${inv.total}.\n\nThank you for your business.`);
+
+    window.location.href = `mailto:${client.email}?subject=${subject}&body=${body}`;
+    showSystemMessage('📧 Opening email client...');
 }
 
 function closePreviewModal() {
     const modal = document.getElementById('preview-modal');
-    if (modal) modal.classList.add('hidden');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -904,3 +1053,4 @@ window.addLineItem = addLineItem;
 window.downloadInvoice = downloadInvoice;
 window.sendInvoice = sendInvoice;
 window.closePreviewModal = closePreviewModal;
+
