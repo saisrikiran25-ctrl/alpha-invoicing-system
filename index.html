@@ -10,6 +10,7 @@
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="style.css?v=emergency_fix_2">
     <script src="app.js?v=emergency_fix_2"></script>
 </head>
@@ -166,6 +167,8 @@
                         </div>
 
                         <div class="action-panel">
+                            <button type="button" class="btn btn--secondary btn--full-width"
+                                style="margin-bottom: 10px;" onclick="previewInvoice()">Preview Invoice</button>
                             <!-- saveDraft renamed to saveInvoiceFunc in app.js for consistent naming, updated here -->
                             <button type="button" class="btn btn--primary btn--full-width"
                                 onclick="saveInvoiceFunc()">Save Invoice</button>
