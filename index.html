@@ -11,8 +11,14 @@
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="style_v6.css">
-    <script src="app_v6.js"></script>
+    <script>
+        document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
+        document.write('<script src="app.js?v=' + Date.now() + '"><\/script>');
+    </script>
+    <noscript>
+        <link rel="stylesheet" href="style.css">
+        <script src="app.js"></script>
+    </noscript>
 </head>
 
 <body>
