@@ -1357,15 +1357,18 @@ select.form-control {
 /* New Invoice Button */
 .new-invoice-button {
   position: fixed;
-  bottom: var(--space-32);
-  right: var(--space-32);
-  width: 60px;
-  height: 60px;
+  bottom: var(--space-24);
+  right: var(--space-24);
+  width: 50px;
+  /* Reduced from 60px */
+  height: 50px;
+  /* Reduced from 60px */
   border-radius: 50%;
   background: linear-gradient(135deg, #00FFFF, rgba(0, 255, 255, 0.7));
   border: none;
   color: #0A0C10;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
+  /* Reduced from 3xl */
   font-weight: bold;
   cursor: pointer;
   display: flex;
@@ -2102,9 +2105,9 @@ select.form-control {
 /* DASHBOARD STATS GRID */
 .dashboard-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-24);
-  margin-bottom: var(--space-48);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
 }
 
 .stat-card {
@@ -2112,7 +2115,7 @@ select.form-control {
   backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 255, 255, 0.15);
   border-radius: var(--radius-lg);
-  padding: var(--space-32);
+  padding: var(--space-20);
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -2152,7 +2155,7 @@ select.form-control {
 
 .stat-value {
   font-family: 'Orbitron', monospace;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 700;
   background: linear-gradient(to right, #ffffff, #00FFFF);
   -webkit-background-clip: text;
@@ -2164,11 +2167,11 @@ select.form-control {
 
 /* PRIORITY FEED TABLE */
 .priority-feed {
-  background: rgba(10, 25, 47, 0.6);
-  backdrop-filter: blur(16px);
+  background: rgba(10, 25, 47, 0.7);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 255, 255, 0.1);
   border-radius: var(--radius-xl);
-  padding: var(--space-32);
+  padding: var(--space-20);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   /* For border radius */
