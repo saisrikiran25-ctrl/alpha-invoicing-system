@@ -1,5 +1,6 @@
 // API base
-const API = 'http://localhost:3000/api';
+const API = '/api';
+;
 
 // Generic request helper
 async function api(endpoint, method, body, token) {
@@ -41,6 +42,15 @@ async function login(data) {
 async function getStats(token) {
   return api('/dashboard/stats', 'GET', null, token);
 }
+// User Settings API helpers (NEW)
+async function saveUserSettings(data, token) {
+    return api('/user/settings', 'POST', data, token);
+}
+
+async function getUserSettings(token) {
+    return api('/user/settings', 'GET', null, token);
+}
+
 
 // ALPHA INVOICING SYSTEM - CORE ENGINE //
 
@@ -231,57 +241,115 @@ function initializeEventListeners() {
 // Signup - FIXED
 async function handleSignup(e) {
   e.preventDefault();
-  const fullName = document.getElementById('signup-name').value.trim();
-  const nameParts = fullName.split(' ');
+
+  // Get form values
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  const company = document.getElementById('signup-company').value.trim();
+
+  // Validate all fields
+  if (!name) {
+    alert('Name is required');
+    return;
+  }
+  if (!email) {
+    alert('Email is required');
+    return;
+  }
+  if (!password) {
+    alert('Password is required');
+    return;
+  }
+  if (!company) {
+    alert('Company is required');
+    return;
+  }
+
+  // Send CORRECT field names to backend
   const data = {
-    email: document.getElementById('signup-email').value,
-    password: document.getElementById('signup-password').value,
-    firstName: nameParts[0] || '',
-    lastName: nameParts.slice(1).join(' ') || '',
-    companyName: document.getElementById('signup-company').value.trim()
+    name: name,           // ✅ CORRECT - backend expects 'name'
+    email: email,
+    password: password,
+    company: company      // ✅ CORRECT - backend expects 'company'
   };
+
+  console.log('📤 Sending registration:', data);
+
   const result = await register(data);
   if (result.success) {
-    alert('Registered! Now login.');
+    alert('✅ Registered! Now login.');
     switchAuthView('login');
   } else {
-    alert('Error: ' + result.error);
+    alert('❌ Error: ' + result.error);
   }
 }
 
 // Login - FIXED
 async function handleLogin(e) {
   e.preventDefault();
+
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+
+  // Validate fields
+  if (!email) {
+    alert('Email is required');
+    return;
+  }
+  if (!password) {
+    alert('Password is required');
+    return;
+  }
+
   const data = {
-    email: document.getElementById('login-email').value,
-    password: document.getElementById('login-password').value
+    email: email,
+    password: password
   };
+
+  console.log('📤 Sending login:', data);
+
   const result = await login(data);
+
   if (result.success) {
+    console.log('✅ Login successful, token:', result.token);
     localStorage.setItem('token', result.token);
     state.isAuthenticated = true;
     state.currentModule = 'invoicing';
     state.currentView = 'dashboard';
     renderCurrentState();
-    alert('Logged in!');
+    alert('✅ Logged in! Welcome.');
     loadDashboard();
   } else {
-    alert('Error: ' + result.error);
+    alert('❌ Error: ' + result.error);
   }
 }
 
 // Dashboard load
 async function loadDashboard() {
-  const token = localStorage.getItem('token');
-  const invRes = await getInvoices(token);
-  state.invoices = invRes.success ? invRes.invoices : [];
-  const cliRes = await getClients(token);
-  state.clients  = cliRes.success ? cliRes.clients  : [];
-  // Update stats
-  document.getElementById('totalClients').textContent  = state.clients.length;
-  document.getElementById('totalInvoices').textContent = state.invoices.length;
-  renderInvoicesList();
+    const token = localStorage.getItem('token');
+    
+    // Load invoices (existing)
+    const invRes = await getInvoices(token);
+    state.invoices = invRes.success ? invRes.invoices : [];
+    
+    // Load clients (existing)
+    const cliRes = await getClients(token);
+    state.clients = cliRes.success ? cliRes.clients : [];
+    
+    // NEW: Load user settings from database
+    const settingsRes = await getUserSettings(token);
+    if (settingsRes.success && settingsRes.settings) {
+        Object.assign(state.user, settingsRes.settings);
+    }
+    
+    // Update stats (existing)
+    document.getElementById('totalClients').textContent = state.clients.length;
+    document.getElementById('totalInvoices').textContent = state.invoices.length;
+    
+    renderInvoicesList();
 }
+
 
 
 function handlePasswordReset(e) {
@@ -431,32 +499,34 @@ function loadSettingsForm() {
     }
 }
 
-function saveSettings() {
-    // Update user state with form values
-    const updates = [
-        ['company-name', 'companyName'],
-        ['company-address', 'companyAddress'],
-        ['company-email', 'companyEmail'],
-        ['company-phone', 'companyPhone'],
-        ['bank-name', 'bankName'],
-        ['account-number', 'accountNumber'],
-        ['account-holder', 'accountHolder'],
-        ['payment-terms', 'paymentTerms']
-    ];
+async function saveSettings() {
+    // Collect form data
+    const settingsData = {
+        companyName: document.getElementById('company-name')?.value || '',
+        companyAddress: document.getElementById('company-address')?.value || '',
+        companyEmail: document.getElementById('company-email')?.value || '',
+        companyPhone: document.getElementById('company-phone')?.value || '',
+        bankName: document.getElementById('bank-name')?.value || '',
+        accountNumber: document.getElementById('account-number')?.value || '',
+        accountHolder: document.getElementById('account-holder')?.value || '',
+        paymentTerms: parseInt(document.getElementById('payment-terms')?.value) || 30,
+        logo: state.user.logo || null
+    };
     
-    updates.forEach(([elementId, userProperty]) => {
-        const element = document.getElementById(elementId);
-        if (element) {
-            if (userProperty === 'paymentTerms') {
-                state.user[userProperty] = parseInt(element.value) || 30;
-            } else {
-                state.user[userProperty] = element.value;
-            }
-        }
-    });
+    // Update local state (existing behavior preserved)
+    Object.assign(state.user, settingsData);
     
-    showSystemMessage('CONFIGURATION MATRIX UPDATED: Business Profile Enhanced');
+    // NEW: Save to database
+    const token = localStorage.getItem('token');
+    const result = await saveUserSettings(settingsData, token);
+    
+    if (result.success) {
+        showSystemMessage('✅ CONFIGURATION MATRIX UPDATED - Settings Saved!');
+    } else {
+        showSystemMessage('❌ Save failed: ' + (result.error || 'Unknown error'));
+    }
 }
+
 
 function populatePaymentTermsSelect() {
     const select = document.getElementById('payment-terms');
