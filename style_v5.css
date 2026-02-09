@@ -2108,16 +2108,31 @@ select.form-control {
 
 html,
 body {
-  overflow-y: auto;
+  overflow: hidden; /* STRICT: No global scroll */
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 .invoicing-module {
-  overflow-y: auto !important;
-  padding-bottom: 80px;
-  /* Ensure space for fixed button */
+  overflow: hidden; /* Disable module scroll, we specific panels to scroll */
   height: 100vh;
-  /* Ensure full height for scroll */
-  display: block;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0 !important; /* Remove padding that causes overflow */
+}
+
+/* Scrollable Areas */
+.dashboard-view,
+.invoice-builder-view {
+    height: 100%;
+    overflow-y: auto; /* Allow these specific views to scroll if needed */
+    padding-bottom: 100px; /* Space for fixed elements */
+}
+
+.priority-feed {
+    max-height: 400px; /* Specific height limit for feed */
+    overflow-y: auto; /* Scroll ONLY the feed */
 }
 
 /* Fix for invalid space-y property */

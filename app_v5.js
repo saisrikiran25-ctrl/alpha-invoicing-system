@@ -335,7 +335,8 @@ async function saveInvoiceFunc() {
     if (!validateInvoiceForm()) return;
     collectInvoiceData();
 
-    // Check for duplicate number
+    // Check for duplicate number (only if NEW invoice)
+    // If editing (index >= 0), we skip this check or check if number conflicts with ANOTHER invoice
     const existingIndex = state.invoices.findIndex(inv => inv.number === state.currentInvoice.number && inv.id !== state.currentInvoice.id);
     if (existingIndex >= 0) {
         showSystemMessage('❌ Error: Invoice number already exists');
@@ -345,14 +346,27 @@ async function saveInvoiceFunc() {
     // Update or Add
     const index = state.invoices.findIndex(inv => inv.id === state.currentInvoice.id);
     if (index >= 0) {
-        state.invoices[index] = state.currentInvoice;
+        // UPDATE EXISTING: Ensure we preserve the ID and CreatedAt, but update everything else
+        const preservedId = state.invoices[index].id;
+        const preservedCreatedAt = state.invoices[index].createdAt;
+        const preservedStatus = state.invoices[index].status; // Preserve status unless explicitly changed
+
+        state.invoices[index] = {
+            ...state.currentInvoice,
+            id: preservedId,
+            createdAt: preservedCreatedAt,
+            status: preservedStatus // Maintain status (e.g. don't reset 'sent' to 'draft' accidentally)
+        };
     } else {
+        // NEW INVOICE
         state.invoices.push(state.currentInvoice);
     }
 
     // PERSIST TO STORAGE
     if (Storage.saveInvoices(state.invoices)) {
-        showSystemMessage('✅ Invoice Saved locally!');
+        showSystemMessage('✅ Invoice Saved & Updated!');
+        // Force refresh of dashboard logic
+        loadDashboard();
         switchInvoicingView('dashboard');
     } else {
         showSystemMessage('❌ Error: Failed to save to local storage');
@@ -431,15 +445,26 @@ function editInvoice(id) {
     const invoice = state.invoices.find(inv => inv.id === id);
     if (!invoice) return;
 
+    // STRICT LOCK: Check if status is 'sent'
+    if (invoice.status === 'sent') {
+        showSystemMessage('⛔ ACCESS DENIED: This invoice has been SENT and is strictly locked.');
+        return;
+    }
+
     state.currentInvoice = JSON.parse(JSON.stringify(invoice)); // Deep copy
     switchInvoicingView('builder');
 
     // Populate form
     setTimeout(() => {
-        document.getElementById('invoice-number').value = invoice.number;
-        document.getElementById('client-select').value = invoice.client;
-        if (invoice.dueDate) document.getElementById('due-date').value = invoice.dueDate.split('T')[0];
-        document.getElementById('tax-rate').value = invoice.taxRate;
+        const invNumInput = document.getElementById('invoice-number');
+        const clientSelect = document.getElementById('client-select');
+        const dueDateInput = document.getElementById('due-date');
+        const taxRateInput = document.getElementById('tax-rate');
+
+        if (invNumInput) invNumInput.value = invoice.number;
+        if (clientSelect) clientSelect.value = invoice.client;
+        if (dueDateInput && invoice.dueDate) dueDateInput.value = invoice.dueDate.split('T')[0];
+        if (taxRateInput) taxRateInput.value = invoice.taxRate;
 
         clearLineItems();
         // Re-add line items
@@ -1054,10 +1079,32 @@ function sendInvoice() {
     const subject = encodeURIComponent(`Invoice #${inv.number} from ${state.user.companyName}`);
     const body = encodeURIComponent(bodyContent);
 
+    // CRITICAL: Update Status to 'sent' and LOCK it
+    inv.status = 'sent';
+
+    // Update in state
+    const index = state.invoices.findIndex(i => i.id === inv.id);
+    if (index >= 0) {
+        state.invoices[index].status = 'sent';
+        // Force Save
+        Storage.saveInvoices(state.invoices);
+    } else {
+        // If sending unsaved invoice, save it first
+        inv.status = 'sent';
+        state.invoices.push(inv);
+        Storage.saveInvoices(state.invoices);
+    }
+
+    // Refresh Dashboard to show "Sent" badge
+    setTimeout(() => loadDashboard(), 500);
+
     // Open default mail client in new tab/window
     window.open(`mailto:${client.email}?subject=${subject}&body=${body}`, '_blank');
 
-    showSystemMessage('📧 Opening email client...');
+    showSystemMessage('📧 Invoice Marked as SENT & LOCKED');
+
+    // Return to dashboard since it's now locked
+    setTimeout(() => switchInvoicingView('dashboard'), 2000);
 }
 
 function closePreviewModal() {
