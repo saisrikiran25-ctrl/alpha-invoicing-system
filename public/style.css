@@ -2102,7 +2102,37 @@ select.form-control {
    PREMIUM DASHBOARD ENHANCEMENTS (Glassmorphism & Neon)
    ============================================================================ */
 
-/* DASHBOARD STATS GRID */
+/* ============================================================================
+   FINAL PROD FIXES
+   ============================================================================ */
+
+html,
+body {
+  overflow-y: auto;
+}
+
+.invoicing-module {
+  overflow-y: auto !important;
+  padding-bottom: 80px;
+  /* Ensure space for fixed button */
+  height: 100vh;
+  /* Ensure full height for scroll */
+  display: block;
+}
+
+/* Fix for invalid space-y property */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* Ensure button doesn't overlap content */
+.new-invoice-button {
+  bottom: 30px;
+  right: 30px;
+}
+
 .dashboard-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
