@@ -899,84 +899,118 @@ function previewInvoice() {
     }
 
     // 4. Generate HTML
+    // 4. Generate HTML - PROFESSIONAL V6 DESIGN
     const previewContainer = document.getElementById('invoice-preview');
     if (!previewContainer) return;
 
-    const logoHtml = settings.logo ? `<div class="invoice-logo"><img src="${settings.logo}" alt="Company Logo"></div>` : '';
+    const logoHtml = settings.logo ? `<img src="${settings.logo}" style="max-height: 80px; max-width: 200px; object-fit: contain;">` : '';
 
-    // DARK BLUE COLOR: #1e3a8a (Navy Blue - Clearly Visible)
-    const darkBlue = '#1e3a8a';
+    // IMAGE COLORS
+    const headerBg = '#2C3E50'; // Dark Slate Blue from sample
+    const tableHeaderBg = '#f0f0f0';
+    const borderColor = '#000000'; // Strict black borders as per sample grid
 
     const html = `
-        <div class="invoice-box" style="padding: 40px; background: white !important; color: ${darkBlue} !important; font-family: 'Inter', sans-serif;">
-            <div class="invoice-header" style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-                <div class="company-details">
-                    ${logoHtml}
-                    <h2 style="margin: 0; color: ${darkBlue} !important; font-weight: 700;">${settings.companyName || ''}</h2>
-                    <p style="margin: 5px 0; color: ${darkBlue} !important; font-size: 0.9em; white-space: pre-line;">${settings.companyAddress || ''}</p>
-                    <p style="margin: 0; color: ${darkBlue} !important; font-size: 0.9em;">${settings.companyEmail || ''}</p>
-                    <p style="margin: 0; color: ${darkBlue} !important; font-size: 0.9em;">${settings.companyPhone || ''}</p>
-                </div>
-                <div class="invoice-meta" style="text-align: right;">
-                    <h1 style="margin: 0; color: ${darkBlue} !important; font-size: 2.5em; font-weight: 900;">INVOICE</h1>
-                    <p style="margin: 5px 0; font-weight: 600; color: ${darkBlue} !important;"># ${inv.number}</p>
-                    <p style="margin: 0; color: ${darkBlue} !important;">Date: ${inv.createdAt.split('T')[0]}</p>
-                    <p style="margin: 0; color: ${darkBlue} !important;">Due: ${inv.dueDate || 'On Receipt'}</p>
-                </div>
+        <div class="invoice-box" style="padding: 0; background: white !important; font-family: 'Inter', sans-serif; color: #000 !important; max-width: 800px; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            
+            <!-- 1. HEADER STRIP -->
+            <div style="background: ${headerBg}; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; color: white !important;">
+                <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: white !important;">${settings.companyName || 'Alpha'}</h1>
+                <h1 style="margin: 0; font-size: 32px; font-weight: 700; color: white !important; letter-spacing: 1px;">INVOICE</h1>
             </div>
 
-            <div class="client-details" style="margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px;">
-                <h3 style="margin: 0 0 10px 0; color: ${darkBlue} !important; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Bill To:</h3>
-                <h4 style="margin: 0; font-size: 1.2em; font-weight: 600; color: ${darkBlue} !important;">${client.name}</h4>
-                <p style="margin: 5px 0; color: ${darkBlue} !important; white-space: pre-line;">${client.address || ''}</p>
-                <p style="margin: 0; color: ${darkBlue} !important;">${client.email || ''}</p>
-            </div>
-
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-                <thead>
-                    <tr style="background: #f8f9fa;">
-                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Description</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Qty</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Price</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid ${darkBlue}; color: ${darkBlue} !important;">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${inv.lineItems.map(item => `
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px; color: ${darkBlue} !important;">${item.description}</td>
-                        <td style="padding: 12px; text-align: right; color: ${darkBlue} !important;">${item.quantity}</td>
-                        <td style="padding: 12px; text-align: right; color: ${darkBlue} !important;">₹${parseFloat(item.price).toFixed(2)}</td>
-                        <td style="padding: 12px; text-align: right; font-weight: 600; color: ${darkBlue} !important;">₹${parseFloat(item.total).toFixed(2)}</td>
-                    </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-
-            <div class="invoice-totals" style="display: flex; flex-direction: column; align-items: flex-end;">
-                <div style="width: 250px;">
-                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: ${darkBlue} !important;">
-                        <span>Subtotal:</span>
-                        <span>₹${parseFloat(inv.subtotal).toFixed(2)}</span>
+            <div style="padding: 40px;">
+                
+                <!-- 2. INFO ROW -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
+                    <div style="flex: 1;">
+                        ${logoHtml}
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: ${darkBlue} !important;">
-                        <span>Tax (${inv.taxRate}%):</span>
-                        <span>₹${parseFloat(inv.taxAmount).toFixed(2)}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid ${darkBlue}; margin-top: 10px; font-weight: 700; color: ${darkBlue} !important; font-size: 1.2em;">
-                        <span>Total:</span>
-                        <span>₹${parseFloat(inv.total).toFixed(2)}</span>
+                    <div style="text-align: right;">
+                        <p style="margin: 5px 0; color: #000 !important;"><strong>Invoice No:</strong> ${inv.number}</p>
+                        <p style="margin: 5px 0; color: #000 !important;"><strong>Invoice Date:</strong> ${inv.createdAt.split('T')[0]}</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="invoice-footer" style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.8em; color: ${darkBlue} !important; text-align: center;">
-                <h4 style="margin: 0 0 5px 0; color: ${darkBlue} !important;">Payment Terms</h4>
-                <p style="margin: 0 0 10px 0;">${settings.paymentTermsLabel || `Payment due within ${settings.paymentTerms || 30} days`}</p>
-                <div style="background: #f8f9fa; padding: 10px; display: inline-block; border-radius: 4px;">
-                    <p style="margin: 0;"><strong>Bank:</strong> ${settings.bankName || 'N/A'} | <strong>Account:</strong> ${settings.accountNumber || 'N/A'}</p>
+                <!-- 3. ADDRESS BLOCKS -->
+                <div style="display: flex; justify-content: space-between; margin-bottom: 40px; gap: 40px;">
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 700; color: #000 !important;">Seller:</h3>
+                        <p style="margin: 0; font-weight: 600; color: #000 !important;">${settings.companyName || ''}</p>
+                        <p style="margin: 5px 0; white-space: pre-line; color: #000 !important;">${settings.companyAddress || ''}</p>
+                        <p style="margin: 5px 0; color: #000 !important;">Mail: ${settings.companyEmail || ''}</p>
+                        <p style="margin: 5px 0; color: #000 !important;">Phone: ${settings.companyPhone || ''}</p>
+                    </div>
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 700; color: #000 !important;">Bill To:</h3>
+                        <p style="margin: 0; font-weight: 600; color: #000 !important;">${client.name}</p>
+                        <p style="margin: 5px 0; white-space: pre-line; color: #000 !important;">${client.address || ''}</p>
+                        <p style="margin: 5px 0; color: #000 !important;">Mail: ${client.email || ''}</p>
+                    </div>
                 </div>
-                <p style="margin-top: 20px; font-style: italic;">Thank you for your business!</p>
+
+                <!-- 4. GRID TABLE -->
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; border: 2px solid ${borderColor};">
+                    <thead>
+                        <tr style="background: ${tableHeaderBg}; border-bottom: 2px solid ${borderColor};">
+                            <th style="padding: 10px; text-align: center; border-right: 1px solid ${borderColor}; color: #000 !important; font-weight: 700; width: 50px;">No.</th>
+                            <th style="padding: 10px; text-align: left; border-right: 1px solid ${borderColor}; color: #000 !important; font-weight: 700;">Description</th>
+                            <th style="padding: 10px; text-align: center; border-right: 1px solid ${borderColor}; color: #000 !important; font-weight: 700; width: 80px;">Quantity</th>
+                            <th style="padding: 10px; text-align: right; border-right: 1px solid ${borderColor}; color: #000 !important; font-weight: 700; width: 100px;">Item Price</th>
+                            <th style="padding: 10px; text-align: right; color: #000 !important; font-weight: 700; width: 100px;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${inv.lineItems.map((item, index) => `
+                        <tr style="border-bottom: 1px solid ${borderColor};">
+                            <td style="padding: 10px; text-align: center; border-right: 1px solid ${borderColor}; color: #000 !important;">${index + 1}</td>
+                            <td style="padding: 10px; text-align: left; border-right: 1px solid ${borderColor}; color: #000 !important;">${item.description}</td>
+                            <td style="padding: 10px; text-align: center; border-right: 1px solid ${borderColor}; color: #000 !important;">${item.quantity}</td>
+                            <td style="padding: 10px; text-align: right; border-right: 1px solid ${borderColor}; color: #000 !important;">${parseFloat(item.price).toFixed(2)}</td>
+                            <td style="padding: 10px; text-align: right; color: #000 !important;">${parseFloat(item.total).toFixed(2)}</td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+
+                <!-- 5. TOTALS BLOCK -->
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
+                    <div style="width: 300px;">
+                        <div style="display: flex; justify-content: space-between; padding: 5px 10px; color: #000 !important;">
+                            <span>Subtotal:</span>
+                            <span>${parseFloat(inv.subtotal).toFixed(2)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 5px 10px; color: #000 !important;">
+                            <span>Tax (${inv.taxRate}%):</span>
+                            <span>${parseFloat(inv.taxAmount).toFixed(2)}</span>
+                        </div>
+                        
+                        <!-- GRAND TOTAL BLOCK -->
+                        <div style="background: ${headerBg}; color: white !important; font-weight: 700; padding: 10px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: white !important;">Grand Total:</span>
+                            <span style="color: white !important; font-size: 1.1em;">${parseFloat(inv.total).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. FOOTER NOTES -->
+                <div>
+                    <p style="margin: 0 0 10px 0; font-weight: 700; color: #000 !important;">Notes:</p>
+                    <ol style="margin: 0 0 20px 0; padding-left: 20px; color: #000 !important; font-size: 14px;">
+                        <li style="margin-bottom: 5px;">Payment is due within ${settings.paymentTerms || 30} days from the date of invoice.</li>
+                        <li>Please make payment to the following bank account:</li>
+                    </ol>
+                    
+                    <div style="margin-left: 20px; font-size: 14px; color: #000 !important;">
+                        <p style="margin: 2px 0;">Bank Name: ${settings.bankName || 'N/A'}</p>
+                        <p style="margin: 2px 0;">Account Number: ${settings.accountNumber || 'N/A'}</p>
+                        <p style="margin: 2px 0;">Account Holder: ${settings.accountHolder || settings.companyName || 'N/A'}</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 50px; text-align: center; font-weight: 700; font-size: 18px; color: #000 !important;">
+                    Thank You for Your Business!
+                </div>
             </div>
         </div>
     `;
