@@ -2386,3 +2386,12 @@ body {
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
   transform: translateY(-1px);
 }
+
+/* FORCE INVOICE PREVIEW TEXT COLOR */
+#invoice-preview * {
+  color: #0A0C10 !important;
+}
+
+#invoice-preview .invoice-box {
+  color: #0A0C10 !important;
+}

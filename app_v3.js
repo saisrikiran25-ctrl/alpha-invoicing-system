@@ -417,7 +417,7 @@ function renderInvoicesList() {
             <td><span class="invoice-id-cell">${inv.number}</span></td>
             <td>${clientName}</td>
             <td>${date}</td>
-            <td>$${total}</td>
+            <td>₹${total}</td>
             <td><span class="status-badge status-${inv.status || 'draft'}">${inv.status || 'draft'}</span></td>
             <td>
                 <button class="action-btn" onclick="editInvoice(${inv.id})">EDIT</button>
@@ -735,7 +735,7 @@ function calculateInvoiceTotal() {
 
 function updateAmount(id, val) {
     const el = document.getElementById(id);
-    if (el) el.textContent = val.toFixed(2);
+    if (el) el.textContent = '₹' + val.toFixed(2);
 }
 
 function populatePaymentTermsSelect() {
