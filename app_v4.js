@@ -879,8 +879,8 @@ function previewInvoice() {
 
     const logoHtml = settings.logo ? `<div class="invoice-logo"><img src="${settings.logo}" alt="Company Logo"></div>` : '';
 
-    // DARK BLUE COLOR: #0A0C10 (Matches App Background)
-    const darkBlue = '#0A0C10';
+    // DARK BLUE COLOR: #1e3a8a (Navy Blue - Clearly Visible)
+    const darkBlue = '#1e3a8a';
 
     const html = `
         <div class="invoice-box" style="padding: 40px; background: white !important; color: ${darkBlue} !important; font-family: 'Inter', sans-serif;">
