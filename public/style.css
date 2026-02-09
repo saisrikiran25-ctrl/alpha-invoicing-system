@@ -1029,7 +1029,7 @@ select.form-control {
 
 /* Invoicing Module - Living Energy Aesthetic */
 .invoicing-module {
-  display: none;
+  display: block; /* FIXED: Visible by default for static site */
   min-height: 100vh;
   background: #0A0C10;
   font-family: 'Inter', sans-serif;

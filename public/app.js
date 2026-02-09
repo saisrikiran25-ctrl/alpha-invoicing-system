@@ -130,6 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Directly load dashboard
     loadDashboard();
     renderCurrentState();
+
+    // Remove loading overlay
+    const loader = document.getElementById('app-loading');
+    if (loader) loader.style.display = 'none';
 });
 
 function loadDataFromStorage() {
