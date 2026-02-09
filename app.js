@@ -848,6 +848,10 @@ function closeAllModals() {
 // PREVIEW & DOWNLOAD LOGIC
 // ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// PREVIEW & DOWNLOAD LOGIC
+// ----------------------------------------------------------------------------
+
 function previewInvoice() {
     // 1. Validate Basic Data
     if (!validateInvoiceForm()) return;
@@ -871,46 +875,46 @@ function previewInvoice() {
     const logoHtml = settings.logo ? `<div class="invoice-logo"><img src="${settings.logo}" alt="Company Logo"></div>` : '';
 
     const html = `
-        <div class="invoice-box" style="padding: 40px; background: white; color: #333; font-family: 'Inter', sans-serif;">
+        <div class="invoice-box" style="padding: 40px; background: white !important; color: #000; font-family: 'Inter', sans-serif;">
             <div class="invoice-header" style="display: flex; justify-content: space-between; margin-bottom: 40px;">
                 <div class="company-details">
                     ${logoHtml}
-                    <h2 style="margin: 0; color: #2C3E50; font-weight: 700;">${settings.companyName || 'YOUR COMPANY'}</h2>
-                    <p style="margin: 5px 0; color: #666; font-size: 0.9em; white-space: pre-line;">${settings.companyAddress || ''}</p>
-                    <p style="margin: 0; color: #666; font-size: 0.9em;">${settings.companyEmail || ''}</p>
-                    <p style="margin: 0; color: #666; font-size: 0.9em;">${settings.companyPhone || ''}</p>
+                    <h2 style="margin: 0; color: #000; font-weight: 700;">${settings.companyName || 'YOUR COMPANY'}</h2>
+                    <p style="margin: 5px 0; color: #333; font-size: 0.9em; white-space: pre-line;">${settings.companyAddress || ''}</p>
+                    <p style="margin: 0; color: #333; font-size: 0.9em;">${settings.companyEmail || ''}</p>
+                    <p style="margin: 0; color: #333; font-size: 0.9em;">${settings.companyPhone || ''}</p>
                 </div>
                 <div class="invoice-meta" style="text-align: right;">
-                    <h1 style="margin: 0; color: #2C3E50; font-size: 2.5em; font-weight: 900;">INVOICE</h1>
-                    <p style="margin: 5px 0; font-weight: 600; color: #666;"># ${inv.number}</p>
-                    <p style="margin: 0; color: #666;">Date: ${inv.createdAt.split('T')[0]}</p>
-                    <p style="margin: 0; color: #666;">Due: ${inv.dueDate || 'On Receipt'}</p>
+                    <h1 style="margin: 0; color: #000; font-size: 2.5em; font-weight: 900;">INVOICE</h1>
+                    <p style="margin: 5px 0; font-weight: 600; color: #000;"># ${inv.number}</p>
+                    <p style="margin: 0; color: #000;">Date: ${inv.createdAt.split('T')[0]}</p>
+                    <p style="margin: 0; color: #000;">Due: ${inv.dueDate || 'On Receipt'}</p>
                 </div>
             </div>
 
             <div class="client-details" style="margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px;">
-                <h3 style="margin: 0 0 10px 0; color: #2C3E50; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Bill To:</h3>
-                <h4 style="margin: 0; font-size: 1.2em; font-weight: 600;">${client.name}</h4>
-                <p style="margin: 5px 0; color: #666; white-space: pre-line;">${client.address || ''}</p>
-                <p style="margin: 0; color: #666;">${client.email || ''}</p>
+                <h3 style="margin: 0 0 10px 0; color: #000; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Bill To:</h3>
+                <h4 style="margin: 0; font-size: 1.2em; font-weight: 600; color: #000;">${client.name}</h4>
+                <p style="margin: 5px 0; color: #333; white-space: pre-line;">${client.address || ''}</p>
+                <p style="margin: 0; color: #333;">${client.email || ''}</p>
             </div>
 
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                 <thead>
                     <tr style="background: #f8f9fa;">
-                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Description</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Qty</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Price</th>
-                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #2C3E50; color: #2C3E50;">Total</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #000; color: #000;">Description</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #000; color: #000;">Qty</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #000; color: #000;">Price</th>
+                        <th style="padding: 12px; text-align: right; border-bottom: 2px solid #000; color: #000;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${inv.lineItems.map(item => `
                     <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px; color: #333;">${item.description}</td>
-                        <td style="padding: 12px; text-align: right; color: #333;">${item.quantity}</td>
-                        <td style="padding: 12px; text-align: right; color: #333;">$${parseFloat(item.price).toFixed(2)}</td>
-                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #333;">$${parseFloat(item.total).toFixed(2)}</td>
+                        <td style="padding: 12px; color: #000;">${item.description}</td>
+                        <td style="padding: 12px; text-align: right; color: #000;">${item.quantity}</td>
+                        <td style="padding: 12px; text-align: right; color: #000;">$${parseFloat(item.price).toFixed(2)}</td>
+                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #000;">$${parseFloat(item.total).toFixed(2)}</td>
                     </tr>
                     `).join('')}
                 </tbody>
@@ -918,23 +922,23 @@ function previewInvoice() {
 
             <div class="invoice-totals" style="display: flex; flex-direction: column; align-items: flex-end;">
                 <div style="width: 250px;">
-                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #666;">
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #333;">
                         <span>Subtotal:</span>
                         <span>$${parseFloat(inv.subtotal).toFixed(2)}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #666;">
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #333;">
                         <span>Tax (${inv.taxRate}%):</span>
                         <span>$${parseFloat(inv.taxAmount).toFixed(2)}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid #2C3E50; margin-top: 10px; font-weight: 700; color: #2C3E50; font-size: 1.2em;">
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid #000; margin-top: 10px; font-weight: 700; color: #000; font-size: 1.2em;">
                         <span>Total:</span>
                         <span>$${parseFloat(inv.total).toFixed(2)}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="invoice-footer" style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.8em; color: #999; text-align: center;">
-                <h4 style="margin: 0 0 5px 0; color: #2C3E50;">Payment Terms</h4>
+            <div class="invoice-footer" style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.8em; color: #555; text-align: center;">
+                <h4 style="margin: 0 0 5px 0; color: #000;">Payment Terms</h4>
                 <p style="margin: 0 0 10px 0;">${settings.paymentTermsLabel || `Payment due within ${settings.paymentTerms || 30} days`}</p>
                 <div style="background: #f8f9fa; padding: 10px; display: inline-block; border-radius: 4px;">
                     <p style="margin: 0;"><strong>Bank:</strong> ${settings.bankName || 'N/A'} | <strong>Account:</strong> ${settings.accountNumber || 'N/A'}</p>
@@ -946,7 +950,19 @@ function previewInvoice() {
 
     previewContainer.innerHTML = html;
 
-    // 5. Show Modal
+    // 5. Pre-fill Email Body
+    const emailBodyInput = document.getElementById('email-body');
+    if (emailBodyInput) {
+        const emailContent = `Dear ${client.name},\n\nPlease find attached invoice #${inv.number} for ${settings.currency || '$'}${parseFloat(inv.total).toFixed(2)}.\n\nThank you for your business,\n${settings.companyName || 'Alpha User'}`;
+        emailBodyInput.value = emailContent;
+        // Move email box down slightly as requested
+        const emailSection = emailBodyInput.closest('.email-section');
+        if (emailSection) {
+            emailSection.style.marginTop = '30px';
+        }
+    }
+
+    // 6. Show Modal
     const modal = document.getElementById('preview-modal');
     if (modal) {
         modal.classList.remove('hidden');
@@ -990,7 +1006,6 @@ async function downloadInvoice() {
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
 
-        // Handle multi-page if necessary (basic implementation)
         while (heightLeft >= 0) {
             position = heightLeft - imgHeight;
             pdf.addPage();
@@ -1012,8 +1027,6 @@ async function downloadInvoice() {
 }
 
 function sendInvoice() {
-    // Check if sending functionality is plausible (it's static so... no)
-    // But we can simulate or open mailto
     const inv = state.currentInvoice;
     const client = state.clients.find(c => c.id == inv.client);
 
@@ -1022,10 +1035,16 @@ function sendInvoice() {
         return;
     }
 
-    const subject = encodeURIComponent(`Invoice #${inv.number} from ${state.user.companyName}`);
-    const body = encodeURIComponent(`Dear ${client.name},\n\nPlease find attached invoice #${inv.number} for ${state.user.currency || '$'}${inv.total}.\n\nThank you for your business.`);
+    // Get the pre-filled body from the textarea which the user might have edited
+    const emailBodyInput = document.getElementById('email-body');
+    const bodyContent = emailBodyInput ? emailBodyInput.value : `Dear ${client.name},\n\nPlease find attached invoice #${inv.number}.`;
 
-    window.location.href = `mailto:${client.email}?subject=${subject}&body=${body}`;
+    const subject = encodeURIComponent(`Invoice #${inv.number} from ${state.user.companyName}`);
+    const body = encodeURIComponent(bodyContent);
+
+    // Open default mail client in new tab/window
+    window.open(`mailto:${client.email}?subject=${subject}&body=${body}`, '_blank');
+
     showSystemMessage('📧 Opening email client...');
 }
 
