@@ -879,7 +879,7 @@ function previewInvoice() {
             <div class="invoice-header" style="display: flex; justify-content: space-between; margin-bottom: 40px;">
                 <div class="company-details">
                     ${logoHtml}
-                    <h2 style="margin: 0; color: #000; font-weight: 700;">${settings.companyName || 'YOUR COMPANY'}</h2>
+                    <h2 style="margin: 0; color: #000; font-weight: 700;">${settings.companyName || ''}</h2>
                     <p style="margin: 5px 0; color: #333; font-size: 0.9em; white-space: pre-line;">${settings.companyAddress || ''}</p>
                     <p style="margin: 0; color: #333; font-size: 0.9em;">${settings.companyEmail || ''}</p>
                     <p style="margin: 0; color: #333; font-size: 0.9em;">${settings.companyPhone || ''}</p>
