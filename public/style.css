@@ -2128,9 +2128,46 @@ body {
 }
 
 /* Ensure button doesn't overlap content */
+/* ============================================================================
+   FINAL THEME SYNC (Business Info MATCH) & BUTTON FIX
+   ============================================================================ */
+
+/* Force Background & Border match with Settings Section */
+.stat-card,
+.priority-feed {
+  background: rgba(0, 255, 255, 0.05) !important;
+  border: 1px solid rgba(0, 255, 255, 0.2) !important;
+  backdrop-filter: none !important;
+  /* Remove blur if settings doesn't have it, but settings usually has it. Settings CSS says just background. Let's keep it simple. */
+}
+
+/* Force Font Color Match (#00FFFF) */
+.stat-card h3,
+.feed-header h3,
+.stat-value,
+.invoice-id-cell,
+.invoices-table th,
+.invoices-table td {
+  color: #00FFFF !important;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+  /* Add subtle glow to match title */
+}
+
+/* Overwrite specific stat-value gradient */
+.stat-value {
+  background: none !important;
+  -webkit-text-fill-color: #00FFFF !important;
+}
+
+/* Move Button to Bottom Right (Standard Corner) & Ensure Spacing */
 .new-invoice-button {
-  bottom: 30px;
-  right: 30px;
+  bottom: 20px !important;
+  right: 20px !important;
+}
+
+/* Increase padding to ensure button never overlaps content scrolling */
+.invoicing-module {
+  padding-bottom: 150px !important;
 }
 
 .dashboard-stats-grid {
