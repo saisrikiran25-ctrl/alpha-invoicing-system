@@ -1202,7 +1202,8 @@ select.form-control {
 /* Dashboard */
 .command-header {
   text-align: center;
-  margin-bottom: var(--space-32);
+  margin-bottom: 80px;
+  /* Increased from var(--space-32) to push boxes down */
 }
 
 .command-title {
